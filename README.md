@@ -3,7 +3,7 @@
 ## Explicação UNIVESP
 link aulas UNIVESP SO: [Sistemas Operacionais UNIVESP TV](https://www.youtube.com/watch?v=Rl6HhDvW984&list=PLxI8Can9yAHeK7GUEGxMsqoPRmJKwI9Jw&ab_channel=UNIVESP)
 
-[link vídeo explicativo do código](https://www.youtube.com/watch?v=Gwws-FWdfpc&ab_channel=TiagodeLima)
+[link vídeo explicativo do código](https://youtu.be/oPCXKqPVLCo)
 
 **Command:** python main.py --config_file init.config
 ### Quando o Escalonador é chamado?
