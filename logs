@@ -11,77 +11,77 @@ Inserindo o processo Thread-5 na fila
 The process Thread-5 is using the critical region and it has 4 remaining items.
 Thread-5 -  EXECUTING
 The process Thread-5 is using the critical region and it has 4 remaining items.
-Turnround time 0.3030376434326172
-Turnround time 0.30300211906433105
+Turnround time 0.30033159255981445
+Turnround time 0.3005211353302002
 The process Thread-4 is using the critical region and it has 4 remaining items.
-Turnround time 0.3020031452178955
+Turnround time 0.31499814987182617
 Thread-4 -  EXECUTING
 The process Thread-5 is using the critical region and it has 1 remaining items.
-Turnround time 0.31299519538879395
-Turnround time 0.31500768661499023
+Turnround time 0.31099987030029297
+Turnround time 0.3140397071838379
 The item ('Thread-4', 2) was used.
-Turnround time 0.30095553398132324
+Turnround time 0.3130052089691162
 The process: Thread-5 finished!
 Processes in the
-STACK READY QUEUE:  [(<Process(Thread-3, initial)>, -2), (<Process(Thread-4, started 15756)>, -2), (<Process(Thread-2, initial)>, -1), (<Process(Thread-1, initial)
->, 2)]
+STACK READY QUEUE:  [(<Process(Thread-3, initial)>, -2), (<Process(Thread-4, started 892)>, -2), (<Process(Thread-2, initial)>, -1), (<Process(Thread-1, initial)>,
+ 2)]
 The item ('Thread-4', 3) was used.
-Turnround time 0.3040425777435303
+Turnround time 0.30199742317199707
 The item ('Thread-4', 4) was used.
-Turnround time 0.3019993305206299
+Turnround time 0.3020005226135254
 The process Thread-3 is using the critical region and it has 4 remaining items.
 Thread-3 -  EXECUTING
 The process Thread-4 is using the critical region and it has 0 remaining items.
 The item ('Thread-3', 1) was used.
-Turnround time 0.3089632987976074
+Turnround time 0.3120427131652832
 The item ('Thread-3', 2) was used.
-Turnround time 0.31396007537841797
+Turnround time 0.31600427627563477
 The process: Thread-4 finished!
 Processes in the
-STACK READY QUEUE:  [(<Process(Thread-2, initial)>, -1), (<Process(Thread-3, started 2340)>, -1), (<Process(Thread-1, initial)>, 2)]
+STACK READY QUEUE:  [(<Process(Thread-2, initial)>, -1), (<Process(Thread-3, started 4812)>, -1), (<Process(Thread-1, initial)>, 2)]
 The item ('Thread-3', 3) was used.
-Turnround time 0.301999568939209
+Turnround time 0.3130030632019043
 The item ('Thread-3', 4) was used.
-Turnround time 0.31400251388549805
+Turnround time 0.31299662590026855
 The process Thread-2 is using the critical region and it has 4 remaining items.
 Thread-2 -  EXECUTING
 The item ('Thread-2', 1) was used.
 The process Thread-3 is using the critical region and it has 0 remaining items.
-Turnround time 0.3019986152648926
+Turnround time 0.30396318435668945
 The item ('Thread-2', 2) was used.
-Turnround time 0.3140592575073242
+Turnround time 0.3040018081665039
 The process: Thread-3 finished!
 Processes in the
-STACK READY QUEUE:  [(<Process(Thread-2, started 18292)>, 0), (<Process(Thread-1, initial)>, 2)]
+STACK READY QUEUE:  [(<Process(Thread-2, started 9060)>, 0), (<Process(Thread-1, initial)>, 2)]
 The item ('Thread-2', 3) was used.
-Turnround time 0.3019676208496094
+Turnround time 0.31299662590026855
 The item ('Thread-2', 4) was used.
-Turnround time 0.30107998847961426
+Turnround time 0.30203700065612793
 The process Thread-2 is using the critical region and it has 0 remaining items.
 The process: Thread-2 finished!
 Processes in the
 STACK READY QUEUE:  [(<Process(Thread-1, initial)>, 2)]
 The process Thread-1 is using the critical region and it has 4 remaining items.
 Thread-1 -  EXECUTING
-The item ('Thread-1', 1) was used.
 The process Thread-1 is using the critical region and it has 4 remaining items.
-Turnround time 0.3140907287597656
+The item ('Thread-1', 1) was used.
+Turnround time 0.3136460781097412
 The item ('Thread-1', 2) was used.
-Turnround time 0.31148314476013184
+Turnround time 0.3119380474090576
 The process Thread-1 is using the critical region and it has 2 remaining items.
 The item ('Thread-1', 3) was used.
-Turnround time 0.31395602226257324
+Turnround time 0.3132772445678711
 The process Thread-1 is using the critical region and it has 1 remaining items.
 The item ('Thread-1', 4) was used.
-Turnround time 0.31406259536743164
+Turnround time 0.3030061721801758
 The process: Thread-1 finished!
 Processes in the
 STACK READY QUEUE:  []
-Waiting time for Thread-1 is 56.205119609832764
-Waiting time for Thread-2 is 44.205119609832764
-Waiting time for Thread-3 is 36.205119609832764
-Waiting time for Thread-4 is 52.205119609832764
-Waiting time for Thread-5 is 48.205119609832764
+Waiting time for Thread-1 is 48.18177318572998
+Waiting time for Thread-2 is 56.18177318572998
+Waiting time for Thread-3 is 40.18177318572998
+Waiting time for Thread-4 is 44.18177318572998
+Waiting time for Thread-5 is 48.18177318572998
 STACK Shared Buffer1:  [('Thread-5', 1), ('Thread-5', 2), ('Thread-5', 3), ('Thread-4', 1), ('Thread-5', 4)]
 QUEUE Shared Queue:  [('Thread-4', 2), ('Thread-4', 3), ('Thread-4', 4), ('Thread-3', 1), ('Thread-3', 2), ('Thread-3', 3), ('Thread-3', 4), ('Thread-2', 1), ('Thr
 ead-2', 2), ('Thread-2', 3), ('Thread-2', 4), ('Thread-1', 1), ('Thread-1', 2), ('Thread-1', 3), ('Thread-1', 4)]
