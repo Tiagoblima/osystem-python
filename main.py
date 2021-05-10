@@ -151,7 +151,7 @@ class Process(threading.Thread):
         self.quantum = quantum
         self.items = [(self.name, item) for item in range(1, 5)]
         self.cur_state = self.states[0]
-        self.total_time = 0
+        self.cpu_time = 0
         print(f"{self.name} - {self.cur_state}")
 
     def run(self):
@@ -161,7 +161,7 @@ class Process(threading.Thread):
 
         while time.time() - start_time <= self.quantum and len(self.items) > 0:
             critical_region(self.items.pop(0))
-            self.total_time += self.quantum
+            self.cpu_time += self.quantum
             sleep(1)
 
     def remaining(self):
@@ -189,7 +189,7 @@ for string_config in file.readlines()[1:]:
     thread = Process(name=config_dict['NAME'],
                      priority=int(config_dict['PRIORITY']),
                      cpu_bound=bool(config_dict['IO_BOUND']),
-                     quantum=int(config_dict['QUANTUM']))
+                     quantum=random.randint(5, 10))
     print(f'Inserindo o processo {thread.name} na fila')
 
     ready_queue.push_item((thread, thread.priority))
@@ -200,7 +200,7 @@ start = time.time()
 dispatcher()  # Executa os processos
 total = time.time()-start
 for thread in processes:
-    print(f"Waiting time for {thread.name} is {total-thread.total_time}")
+    print(f"Waiting time for {thread.name} is {total-thread.cpu_time}")
 
 thread_exit_Flag = 1
 buffer.inspect_stack()
