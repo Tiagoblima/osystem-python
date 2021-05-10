@@ -51,7 +51,7 @@ class PriorityQueue:
         self.queue = []
 
     def inspect_queue(self):
-        print(f"STACK {self.name}: ", self.queue)
+        print(f"PriorityQueue {self.name}: ", self.queue)
 
     def inspect_next_item(self):
         print(f"{self.name} NEXT ITEM", self.queue[0])
