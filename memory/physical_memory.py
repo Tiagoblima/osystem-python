@@ -26,8 +26,12 @@ class Partition:
             self.available_capacity -= item.size
 
             if self.available_capacity > 0:
-                print("Fragmentação Interna")
+                print("Internal Fragmentation")
                 print(f"Memory Available Now: {self.available_capacity}MBs")
+            else:
+                print("No Internal Fragmentation")
+                print(f"Memory Available Now: {self.available_capacity}MBs")
+
             return True
         else:
             return False
@@ -55,6 +59,7 @@ class Memory:
 
             if p.push_item(process_):
                 print(f"Process {process_.name} allocated at partition {p.name}")
+                time.sleep(3)
                 return True
             else:
                 fails += 1
@@ -63,16 +68,20 @@ class Memory:
             print(f"Process {process_} not added, no partition available. "
                   f"The process size is {process_.size}MBs")
             print("Removing a process and placing it to the SWAP Memory.")
+            time.sleep(3)
             for p_ in self.partitions:
                 # For every process in the slot of the partition if the process size has the size of the current process
                 # Remove it and place it in the SWAP memory.
                 for pr in p_.slot:
                     if pr.size >= process_.size:
                         print(f"Removing the process {pr} from the partition {p_.name}")
+                        time.sleep(3)
                         p_.slot.remove(pr)
                         print(f"Placing the process {pr} in the SWAP Memory")
+                        time.sleep(3)
                         SWAP.append(pr)
                         print(f"Pushing the new process {process_} in the partition {p_.name}.")
+                        time.sleep(3)
                         p_.push_item(process_)
                         return True
         return False
@@ -97,12 +106,16 @@ class Memory:
 
         print("Memory Total Capacity: ", self.total_capacity)
         print(f"Partitions Available Capacity: "
-              f"{sum(self.available_capacity)}MBs - {(sum(self.available_capacity)*100)/self.total_capacity}%", )
+              f"{sum(self.available_capacity)}MBs - {(sum(self.available_capacity) * 100) / self.total_capacity}%", )
         print("Partitions:  ", self.get_partitions())
         print(f"Total Memory Available: {sum(self.available_capacity)}MBs")
+        time.sleep(3)
 
     def size(self):
         return self.total_capacity
+
+
+
 
 
 class Process(threading.Thread):
