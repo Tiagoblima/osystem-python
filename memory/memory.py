@@ -27,10 +27,13 @@ class Partition:
 
             if self.available_capacity > 0:
                 print("Fragmentação Interna")
-                print(f"Memory Available: {self.available_capacity}")
+                print(f"Memory Available Now: {self.available_capacity}MBs")
             return True
         else:
             return False
+
+
+SWAP = []
 
 
 class Memory:
@@ -42,22 +45,29 @@ class Memory:
         self.total_capacity = Partition("test").available_capacity * self.n_partitions
         self.partitions = [Partition(f"p{i}") for i in range(n_partitions)]
         self.available_capacity = Partition("test").CAPACITY * self.n_partitions
-        self.available_partitions = self.partitions
+        self.partitions_status = self.partitions
         self.n_available_partitions = self.n_partitions
         self.total_partitions = self.n_partitions
 
-    def first_fit(self, item):
+    def first_fit(self, process_):
         fails = 0
         for p in self.partitions:
 
-            if p.push_item(item):
-                print(f"Process {item.name} allocated at partition {p.name}")
+            if p.push_item(process_):
+                print(f"Process {process_.name} allocated at partition {p.name}")
                 break
             else:
                 fails += 1
         if fails is self.n_partitions:
-            self.memory_status()
-            raise Warning("Item not added, memory is full.")
+            print(f"Process {process_} not added, no partition available. "
+                  f"The process size is {process_.size}MBs")
+            for p_ in self.partitions:
+
+                for pr in p_.slot:
+                    if pr.size >= process_.size:
+                        p_.slot.remove(pr)
+                        p_.push_item(process_)
+                        SWAP.append(pr)
 
     def get_item(self):
         return self.partitions.pop(0)
@@ -65,20 +75,22 @@ class Memory:
     def reset(self):
         self.partitions = [Partition(f"p{i}") for i in range(self.n_partitions)]
 
-    def get_available_partitions(self):
-        self.available_partitions = [p.slot for p in self.partitions
-                                     if p.available_capacity != 0]
-        return self.available_partitions
+    def get_partitions(self):
+        self.partitions_status = [(p.name, f"Availability {(p.available_capacity / p.CAPACITY) * 100}%") for p in
+                                  self.partitions
+                                  ]
+        return self.partitions_status
 
     def get_n_available_partitions(self):
-        return len(self.get_available_partitions())
+        return len(self.get_partitions())
 
     def memory_status(self):
         self.available_capacity = [p.available_capacity for p in self.partitions]
 
         print("Memory Total Capacity: ", self.total_capacity)
-        print("Memory Available Capacity: ", self.available_capacity)
-        print("Available partitions:  ", self.get_available_partitions())
+        print("Partitions Available Capacity: ", self.available_capacity)
+        print("Partitions:  ", self.get_partitions())
+        print(f"Total Memory Available: {sum(self.available_capacity)}MBs")
 
     def size(self):
         return self.total_capacity
@@ -91,7 +103,8 @@ class Process(threading.Thread):
                  name,
                  priority,
                  cpu_bound,
-                 quantum):
+                 quantum,
+                 size):
         threading.Thread.__init__(self)
         self.id = uuid.uuid1()
 
@@ -100,7 +113,7 @@ class Process(threading.Thread):
         self.io_bound = not cpu_bound
         self.priority = priority
         self.quantum = quantum
-        self.items = [(self.name, item) for item in range(0, random.randint(1000, 10000))]
+        self.items = [(self.name, item) for item in range(0, size)]
         self.size = len(self.items)
         self.cur_state = self.states[0]
         self.cpu_time = 0
@@ -141,10 +154,12 @@ for string_config in file.readlines()[1:]:
     process = Process(name=config_dict['NAME'],
                       priority=int(config_dict['PRIORITY']),
                       cpu_bound=bool(config_dict['IO_BOUND']),
-                      quantum=random.randint(5, 10))
+                      quantum=random.randint(5, 10),
+                      size=int(config_dict['SIZE']))
     print(f'Inserindo o processo {process.name} na Memória')
     mem.first_fit(process)
     processes.append(process)
-    print("-"*40)
+    print("-" * 40)
     print()
 mem.memory_status()
+print(F"SWAP MEMORY: {SWAP}")
