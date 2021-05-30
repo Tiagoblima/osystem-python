@@ -1,6 +1,6 @@
 Individualmente (ou em dupla), implemente (com qualquer linguagem de programação a sua escolha e sem necessidade de interface gráfica) e apresente (gravando video explicando código e execução):
 
-1. A alocação de memória usando partições fixas ou variáveis/segmentação (UMA à sua escolha). Deve ser possível configurar/alterar (ou dar opção ao usuário):
+#### 1. A alocação de memória usando partições fixas ou variáveis/segmentação (UMA à sua escolha). Deve ser possível configurar/alterar (ou dar opção ao usuário):
 
 a. Estabelecer o tamanho máximo de memória física (em qualquer unidade, MB, KB, etc.)
 
@@ -13,7 +13,7 @@ d. A partir da ordem de criação dos processos (FIFO) e DOIS algoritmos de aloc
 e. A cada nova alocação, caso a memória esteja cheia, realizar compactação (apenas se as partições forem dinâmicas/segmentação) e, persistindo a falta de memória, retirar aleatoriamente um processo, que irá para a memória secundária (swapping).
 
 
-2. A alocação de memória usando paginação. Deve ser possível configurar/alterar (ou dar opção ao usuário):
+#### 2. A alocação de memória usando paginação. Deve ser possível configurar/alterar (ou dar opção ao usuário):
 
 a. Estabelecer o tamanho máximo de memória física (em qualquer unidade, MB, KB, etc.)
 

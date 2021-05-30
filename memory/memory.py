@@ -55,19 +55,27 @@ class Memory:
 
             if p.push_item(process_):
                 print(f"Process {process_.name} allocated at partition {p.name}")
-                break
+                return True
             else:
                 fails += 1
+
         if fails is self.n_partitions:
             print(f"Process {process_} not added, no partition available. "
                   f"The process size is {process_.size}MBs")
+            print("Removing a process and placing it to the SWAP Memory.")
             for p_ in self.partitions:
-
+                # For every process in the slot of the partition if the process size has the size of the current process
+                # Remove it and place it in the SWAP memory.
                 for pr in p_.slot:
                     if pr.size >= process_.size:
+                        print(f"Removing the process {pr} from the partition {p_.name}")
                         p_.slot.remove(pr)
-                        p_.push_item(process_)
+                        print(f"Placing the process {pr} in the SWAP Memory")
                         SWAP.append(pr)
+                        print(f"Pushing the new process {process_} in the partition {p_.name}.")
+                        p_.push_item(process_)
+                        return True
+        return False
 
     def get_item(self):
         return self.partitions.pop(0)
@@ -88,7 +96,8 @@ class Memory:
         self.available_capacity = [p.available_capacity for p in self.partitions]
 
         print("Memory Total Capacity: ", self.total_capacity)
-        print("Partitions Available Capacity: ", self.available_capacity)
+        print(f"Partitions Available Capacity: "
+              f"{sum(self.available_capacity)}MBs - {(sum(self.available_capacity)*100)/self.total_capacity}%", )
         print("Partitions:  ", self.get_partitions())
         print(f"Total Memory Available: {sum(self.available_capacity)}MBs")
 
