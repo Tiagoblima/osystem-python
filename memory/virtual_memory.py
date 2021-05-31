@@ -28,18 +28,21 @@ class Page:
         return self.available_capacity > 0
 
     def fragmentation_status(self):
+        print('-' * 40)
         if self.is_available():
             print("Internal Fragmentation")
             print(f"Memory Available Now: {self.available_capacity}KBs")
         else:
             print("No Internal Fragmentation")
             print(f"Memory Available Now: {self.available_capacity}KBs")
+        print('-' * 40)
 
     def push_item(self, space_required):
         if space_required > self.available_capacity:
+            space_available = self.available_capacity
             self.available_capacity = 0
             self.fragmentation_status()
-            return space_required - self.available_capacity
+            return space_required - space_available
 
         elif space_required <= self.available_capacity:
             self.available_capacity -= space_required
@@ -51,9 +54,9 @@ class Page:
 
 
 class VirtualMemory:
-    MAXIMUM_MEMORY = 400000  # KBs
+    MAXIMUM_MEMORY = 40  # MBs
 
-    def __init__(self, n_pages=10000):
+    def __init__(self, n_pages=10):
 
         self.n_pages = n_pages
         self.total_capacity = Page("test").available_capacity * self.n_pages
@@ -65,42 +68,57 @@ class VirtualMemory:
         self.n_available_pages = self.n_pages
         self.total_pages = self.n_pages
 
+        self.reference_table = {**dict.fromkeys(self.pages, 0)}
+        print(self.reference_table)
         self.page_map = {}
-        self.reference_table = {}
+        self.process_map = {}
 
     def replace_page(self):
 
         less_recent_used = None
         minor_reference = np.Inf
-        for process_ in self.page_map.keys():
-            if self.reference_table[process_] < minor_reference:
-                minor_reference = self.reference_table[process_]
-                less_recent_used = self.page_map[process_]
-        process_, pages = self.page_map.pop(less_recent_used)
-        self.available_capacity += sum([p.size for p in pages])
-        SWAP.append((process_, pages))
+        for page in self.reference_table.keys():
+            if self.reference_table[page] < minor_reference:
+                minor_reference = self.reference_table[page]
+                less_recent_used = self.page_map[page]
+        pages_used = self.process_map[less_recent_used]
+
+        SWAP.append(pages_used)
+
+        for page in pages_used:
+            page.size = Page(page.name).CAPACITY
+            self.pages[self.pages.index(page)] = page
 
     def allocate(self, process_):
-        self.page_map[process_] = []
-        fails = 0
+        self.process_map[process_] = []
+
         process_space = process_.size  # The necessary space to allocate the process
         if process_space > self.get_available_capacity():
             print(f"Process {process_} not added, no partition available. "
                   f"The process size is {process_.size}MBs")
             print("Removing a process and placing it to the SWAP Memory.")
+            print('-' * 40)
             time.sleep(3)
 
-        for p in self.pages:
-            process_space = p.push_item(process_space)
-            if process_space > 0:
-                self.page_map[process_].append(p.name)
+        for i, p in enumerate(self.pages):
+
+            if p.is_available():
+                process_space = p.push_item(process_space)
+                print(f"Size to allocate: {process_space}MBs")
+
+                self.page_map[p] = process_
+                self.process_map[process_].append(p)
+                self.reference_table[p] += 1
                 print(f"Process {process_.name} allocated at page {p.name}")
                 time.sleep(3)
+
+            if process_space > 0:
                 continue
             else:
-                fails += 1
+                break
+
         if process_space == 0:
-            self.reference_table[process_] = 1
+            print(f"Process {process_.name} allocated successfully!")
         else:
             self.replace_page()
             self.allocate(process_)
@@ -127,7 +145,7 @@ class VirtualMemory:
 
         print("Memory Total Capacity: ", self.total_capacity)
         print(f"Total Memory Available: "
-              f"{self.get_available_capacity()}KBs - {(self.available_capacity * 100) / self.total_capacity}%", )
+              f"{self.get_available_capacity()}MBs - {(self.available_capacity * 100) / self.total_capacity}%", )
         print("Pages Available:  ", self.get_n_available_pages())
 
         time.sleep(3)
@@ -186,7 +204,7 @@ class Process(threading.Thread):
 
 
 file = open(args.config_file)
-mem = Memory("READY QUEUE")
+mem = VirtualMemory()
 split = lambda config: config.split('=')
 processes = []
 for string_config in file.readlines()[1:]:
@@ -197,7 +215,7 @@ for string_config in file.readlines()[1:]:
                       quantum=random.randint(5, 10),
                       size=int(config_dict['SIZE']))
     print(f'Inserindo o processo {process.name} na Memória')
-    mem.first_fit(process)
+    mem.allocate(process)
     processes.append(process)
     print("-" * 40)
     print()
