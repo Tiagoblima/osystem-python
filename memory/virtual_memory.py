@@ -1,16 +1,7 @@
 import time
 import uuid
-import argparse
-import threading
-# Printing random id using uuid1()
-from time import sleep
-import random
 
 import numpy as np
-
-parser = argparse.ArgumentParser()
-parser.add_argument('--config_file', type=str)
-args = parser.parse_args()
 
 SWAP = []
 
@@ -83,10 +74,10 @@ class VirtualMemory:
                 less_recent_used = self.page_map[page]
         pages_used = self.process_map[less_recent_used]
 
-        SWAP.append(pages_used)
+        SWAP.append([(p.name, p) for p in pages_used])
 
         for page in pages_used:
-            page.size = Page(page.name).CAPACITY
+            page.available_capacity = Page(page.name).CAPACITY
             self.pages[self.pages.index(page)] = page
 
     def allocate(self, process_):
@@ -147,77 +138,11 @@ class VirtualMemory:
         print(f"Total Memory Available: "
               f"{self.get_available_capacity()}MBs - {(self.available_capacity * 100) / self.total_capacity}%", )
         print("Pages Available:  ", self.get_n_available_pages())
-
+        print(F"SWAP MEMORY: {SWAP}")
         time.sleep(3)
 
     def size(self):
         return self.total_capacity
 
 
-class Process(threading.Thread):
-    states = ("READY", "EXECUTING", "BLOCKED")
-
-    def __init__(self,
-                 name,
-                 priority,
-                 cpu_bound,
-                 quantum,
-                 size):
-        threading.Thread.__init__(self)
-        self.id = uuid.uuid1()
-
-        self.name = name
-        self.cpu_bound = cpu_bound
-        self.io_bound = not cpu_bound
-        self.priority = priority
-        self.quantum = quantum
-        self.items = [(self.name, item) for item in range(0, size)]
-        self.size = len(self.items)
-        self.cur_state = self.states[0]
-        self.cpu_time = 0
-        print(f"{self.name} - {self.cur_state}")
-
-    def run(self):
-        self.cur_state = self.states[1]
-        print(f"{self.name} - ", self.cur_state)
-        start_time = time.time()
-
-        while time.time() - start_time <= self.quantum and len(self.items) > 0:
-            self.items.pop(0)
-            self.cpu_time += self.quantum
-            sleep(1)
-
-    def remaining(self):
-        return len(self.items)
-
-    def finished(self):
-        return len(self.items) <= 0
-
-    def inspect(self):
-        info = "-" * 20 + "+PROCESS INFORMATION+" + "-" * 20 + \
-               f"\n+NAME={self.name}\t+ID={self.id}\n" \
-               f"+CPU_BOUND={self.cpu_bound}\t+IO_BOUND={self.io_bound}\n" \
-               f"+PRIORITY={self.priority}\t+QUANTUM={self.quantum}\n" \
-               '-' * 60
-
-        return info
-
-
-file = open(args.config_file)
-mem = VirtualMemory()
-split = lambda config: config.split('=')
-processes = []
-for string_config in file.readlines()[1:]:
-    config_dict = dict(list(map(split, string_config.split())))
-    process = Process(name=config_dict['NAME'],
-                      priority=int(config_dict['PRIORITY']),
-                      cpu_bound=bool(config_dict['IO_BOUND']),
-                      quantum=random.randint(5, 10),
-                      size=int(config_dict['SIZE']))
-    print(f'Inserindo o processo {process.name} na Memória')
-    mem.allocate(process)
-    processes.append(process)
-    print("-" * 40)
-    print()
-mem.memory_status()
 print(F"SWAP MEMORY: {SWAP}")
