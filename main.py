@@ -2,7 +2,7 @@ import argparse
 import random
 import time
 
-from memory.physical_memory import Memory
+from memory.physical_memory import PhysicalMemory
 from memory.virtual_memory import VirtualMemory
 from process.process import Process
 from round_robin import Dispatcher
@@ -15,7 +15,7 @@ args = parser.parse_args()
 PATH_TO_CONFIG = 'init.config'
 PARTITION_SIZE = 20  # MB
 MEMORY_SIZE = 200  # MB
-
+MAXIMUM_MEMORY = 40  # MBs
 
 def load_processes(config_file):
     processes = []
@@ -47,7 +47,9 @@ if args.mode == 1:
     dispatcher.watch()
 
 elif args.mode == 2:
-    phy_mem = Memory("Physical Memory", memory_size=MEMORY_SIZE, partition_size=PARTITION_SIZE)
+    phy_mem = PhysicalMemory("Physical Memory",
+                             memory_size=MEMORY_SIZE,
+                             partition_size=PARTITION_SIZE)
     counter = 0
     while True:
         process = Process(name=f"Thread-{counter}",

@@ -19,14 +19,18 @@ class Page:
         return self.available
 
     def fragmentation_status(self):
-        print('-' * 40)
-        if self.is_available():
-            print("Internal Fragmentation")
-            print(f"Memory Available Now: {self.available_capacity}KBs")
+        print()
+        print("FRAGMENTATION STATUS", end='')
+        print('-' * 20)
+        if self.available_capacity > 0:
+            print("\tInternal Fragmentation")
+            print(f"\tMemory Available Now: {self.available_capacity}MBs")
         else:
-            print("No Internal Fragmentation")
-            print(f"Memory Available Now: {self.available_capacity}KBs")
-        print('-' * 40)
+            print("\tNo Internal Fragmentation")
+            print(f"\tMemory Available Now: {self.available_capacity}MBs")
+        print("END FRAGMENTATION STATUS", end='')
+        print('-' * 20)
+        print()
 
     def push_item(self, space_required):
         if space_required > self.available_capacity:
@@ -45,13 +49,12 @@ class Page:
 
 
 class VirtualMemory:
-    MAXIMUM_MEMORY = 40  # MBs
 
-    def __init__(self, n_pages=10):
+    def __init__(self, maximum_memory_size, page_size):
 
-        self.n_pages = n_pages
+        self.n_pages = int(maximum_memory_size/page_size)
         self.total_capacity = Page("test").available_capacity * self.n_pages
-        self.pages = [Page(f"p{i}") for i in range(n_pages)]
+        self.pages = [Page(f"p{i}") for i in range(self.n_pages)]
         self.available_capacity = Page("test").CAPACITY * self.n_pages
 
         self.pages_status = [p.page_status() for p in self.pages]
