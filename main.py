@@ -15,7 +15,11 @@ args = parser.parse_args()
 PATH_TO_CONFIG = 'init.config'
 PARTITION_SIZE = 20  # MB
 MEMORY_SIZE = 200  # MB
-MAXIMUM_MEMORY = 40  # MBs
+
+MAXIMUM_PHYSICAL_MEMORY = 200  # MBs
+MAXIMUM_VIRTUAL_MEMORY = 350  # MBs
+PAGE_SIZE = 50  # MB
+
 
 def load_processes(config_file):
     processes = []
@@ -64,7 +68,7 @@ elif args.mode == 2:
         counter += 1
 elif args.mode == 3:
 
-    vi_mem = VirtualMemory("READY QUEUE")
+    vi_mem = VirtualMemory(MAXIMUM_PHYSICAL_MEMORY,MAXIMUM_VIRTUAL_MEMORY, PAGE_SIZE)
     for process_ in process_list:
         print(f'Inserindo o processo {process_.name} na Memória')
         vi_mem.allocate(process_)

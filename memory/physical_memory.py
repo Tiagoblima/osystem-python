@@ -65,7 +65,7 @@ class PhysicalMemory:
 
     def swap_out(self):
 
-        random_partition = random.randint(0, self.n_partitions-1)
+        random_partition = random.randint(0, self.n_partitions - 1)
         process_to_swap = self.partitions[random_partition].free_up()
         print(f"Removing the process {process_to_swap} from the partition {self.partitions[random_partition].name}")
         time.sleep(3)
@@ -77,12 +77,12 @@ class PhysicalMemory:
     def allocate(self, process_):
         fails = 0
         print()
-        print('-'*20, end='')
-        print("STARTING ALLOCATION", end='')
+        print('-' * 20, end='')
+        print("STARTING PHYSICAL MEMORY ALLOCATION", end='')
         print('-' * 20)
-        print(f'Inserindo o processo {process_.name} na Memória')
+        print(f'Inserting the process {process_.name} at Memory.')
 
-        if process_.size > int(self.total_capacity/self.n_partitions):
+        if process_.size > int(self.total_capacity / self.n_partitions):
             raise Warning("Cannot allocate process bigger than the partition size.")
 
         for p in self.partitions:
@@ -91,6 +91,7 @@ class PhysicalMemory:
                 if p.push_item(process_):
                     print(f"Process {process_.name} allocated at partition {p.name}")
                     time.sleep(3)
+                    self.available_capacity -= process_.size
                     return True
             else:
                 fails += 1
@@ -104,17 +105,18 @@ class PhysicalMemory:
             print(f"Pushing the new process {process_} in the partition {self.partitions[random_partition].name}.")
             self.partitions[random_partition].push_item(process_)
             time.sleep(3)
+            return True
+        print(f"Process {process_.name} allocated.")
         print()
-        print('-'*20, end='')
+        print('-' * 20, end='')
         print("END ALLOCATION", end='')
         print('-' * 20)
-        return False
 
     def get_item(self):
         return self.partitions.pop(0)
 
     def reset(self):
-        self.partitions = [Partition(f"p{i}", int(self.total_capacity/self.n_partitions))
+        self.partitions = [Partition(f"p{i}", int(self.total_capacity / self.n_partitions))
                            for i in range(self.n_partitions)]
 
     def get_partitions(self):

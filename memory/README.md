@@ -19,13 +19,18 @@ a. Estabelecer o tamanho máximo de memória física (em qualquer unidade, MB, K
 
 b. Estabelecer o tamanho máximo de memória virtual (maior que a memória física e na mesma unidade)
 
-c. Definir previamente o tamanho das páginas (na mesma unidade que a memória física/virtual) e calcular/alocar a quantidade de páginas necessárias a um processo a depender de seu tamanho
+c. Definir previamente o tamanho das páginas (na mesma unidade que a memória física/virtual) 
+e calcular/alocar a quantidade de páginas necessárias a um processo a depender de seu tamanho
 
 d. Definir um processo de duração "infinita" (thread ou simulado) com nome, ID, tamanho (na mesma unidade que a memória física), etc.
 
-e. A partir da ordem de criação dos processos (FIFO) e DOIS algoritmos de substituição de páginas (FIFO, LRU, Relógio, SC, etc. e em caso de algoritmos que verifiquem bits, de tempos em tempos, devem ser alterados/resetados), mostrar a alocação da memória (seu estado/capacidade, se há fragmentação interna, além das páginas livres/alocadas, etc.)
+e. A partir da ordem de criação dos processos (FIFO) e DOIS algoritmos de substituição de páginas 
+(FIFO, LRU, Relógio, SC, etc. e em caso de algoritmos que verifiquem bits, de tempos em tempos, devem 
+ser alterados/resetados), mostrar a alocação da memória (seu estado/capacidade, se há fragmentação interna, 
+além das páginas livres/alocadas, etc.)
 
-f. A cada nova alocação, caso a memória esteja cheia, aplicar um algoritmo de substituição de páginas (UM selecionado) e substituir uma página (de qualquer processo).
+f. A cada nova alocação, caso a memória esteja cheia, aplicar um algoritmo de substituição de páginas 
+(UM selecionado) e substituir uma página (de qualquer processo).
 
 g. Ao final da execução calcule e exiba a quantidade de "page miss" que cada algoritmo sofre no total.
 
