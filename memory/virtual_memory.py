@@ -16,7 +16,7 @@ class Page:
         self.available = True
 
     def is_available(self):
-        return self.available_capacity > 0
+        return self.available
 
     def fragmentation_status(self):
         print('-' * 40)

@@ -13,6 +13,8 @@ parser.add_argument('--mode', type=int, required=True)
 args = parser.parse_args()
 
 PATH_TO_CONFIG = 'init.config'
+PARTITION_SIZE = 20  # MB
+MEMORY_SIZE = 200  # MB
 
 
 def load_processes(config_file):
@@ -45,12 +47,19 @@ if args.mode == 1:
     dispatcher.watch()
 
 elif args.mode == 2:
-    phy_mem = Memory("READY QUEUE")
-    for process_ in process_list:
-        print(f'Inserindo o processo {process_.name} na Memória')
-        phy_mem.allocate(process_)
-    phy_mem.memory_status()
+    phy_mem = Memory("Physical Memory", memory_size=MEMORY_SIZE, partition_size=PARTITION_SIZE)
+    counter = 0
+    while True:
+        process = Process(name=f"Thread-{counter}",
+                          priority=random.randint(-10, 10),
+                          cpu_bound=bool(random.randint(0, 1)),
+                          quantum=random.randint(5, 10),
+                          size=random.randint(5, PARTITION_SIZE))
+        phy_mem.allocate(process)
 
+        if counter % 5 == 0:
+            phy_mem.memory_status()
+        counter += 1
 elif args.mode == 3:
 
     vi_mem = VirtualMemory("READY QUEUE")
