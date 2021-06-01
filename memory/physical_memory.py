@@ -91,6 +91,7 @@ class PhysicalMemory:
                 if p.push_item(process_):
                     print(f"Process {process_.name} allocated at partition {p.name}")
                     time.sleep(3)
+
                     self.available_capacity -= process_.size
                     return True
             else:
@@ -130,13 +131,13 @@ class PhysicalMemory:
         return len(self.get_partitions())
 
     def memory_status(self):
-        self.available_capacity = [p.available_capacity for p in self.partitions]
+        self.available_capacity = sum([p.available_capacity for p in self.partitions])
 
         print("Memory Total Capacity: ", self.total_capacity)
         print(f"Partitions Available Capacity: "
-              f"{sum(self.available_capacity)}MBs - {(sum(self.available_capacity) * 100) / self.total_capacity}%", )
+              f"{self.available_capacity}MBs - {(self.available_capacity* 100) / self.total_capacity}%", )
         print("Partitions:  ", self.get_partitions())
-        print(f"Total Memory Available: {sum(self.available_capacity)}MBs")
+        print(f"Total Memory Available: {self.available_capacity}MBs")
         print(F"SWAP MEMORY: {SWAP}")
         time.sleep(3)
 
