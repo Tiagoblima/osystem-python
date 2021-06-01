@@ -4,7 +4,7 @@ class Memory:
         self.name = name
         self.memory_size = memory_size
 
-    # TO Override
+    # TO DO
     def allocate(self, process_):
         print()
         print('-' * 20, end='')
@@ -21,7 +21,7 @@ class Memory:
         pass
 
     def memory_status(self):
-       pass
+        pass
 
     def size(self):
         return self.memory_size

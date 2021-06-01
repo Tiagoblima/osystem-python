@@ -65,15 +65,16 @@ class VirtualMemory:
         self.page_size = page_size
         self.total_pages = math.ceil(maximum_virtual_size / page_size)
         self.physical_memory = PhysicalMemory(maximum_physical_size)
-        self.on_memory_pages = 0
+        self.active_pages = 0
         self.total_used_pages = 0
-        self.pages = []
+        self.on_memory_pages = []
+        self.page_misses = 0
 
     def test_physical_allocation(self, process_size):
         return self.calculate_pages(process_size) * self.page_size < self.physical_memory.available_capacity
 
     def test_virtual_allocation(self, process_size):
-        return self.total_pages >= self.on_memory_pages + self.calculate_pages(process_size)
+        return self.total_pages >= self.active_pages + self.calculate_pages(process_size)
 
     def calculate_pages(self, process_size):
         return math.ceil(process_size / self.page_size)
@@ -87,7 +88,7 @@ class VirtualMemory:
             process_size = page.push_item(process_size)
             self.physical_memory.allocate(page)
             self.page_map[page] = process_size
-            self.pages.append(page)
+            self.on_memory_pages.append(page)
             pages_allocated.append(page)
 
         return pages_allocated
@@ -96,18 +97,28 @@ class VirtualMemory:
         pages_to_swap = self.calculate_pages(process_size)
 
         for i in range(pages_to_swap):
-            page = self.pages.pop(i)
+            page = self.on_memory_pages.pop(i)
             print(f"Swapping the page {page.name} out..")
             SWAP.append(page)
             new_page = Page(f"page_{self.total_used_pages + i}", self.total_used_pages + i)
             print(f"Created new page {new_page.name}")
-            self.pages.append(new_page)
-            self.on_memory_pages -= 1
+            self.on_memory_pages.append(new_page)
+            self.active_pages -= 1
 
         time.sleep(3)
 
+    def get_process(self, process_id):
+
+        for page in self.process_map[process_id]:
+
+            if page not in self.on_memory_pages:
+                self.page_misses += 1
+            else:
+                self.on_memory_pages.remove(page)
+        return self.process_map.pop(process_id)
+
     def get_available_pages(self):
-        return self.total_pages - self.on_memory_pages
+        return self.total_pages - self.active_pages
 
     def allocate(self, process):
         process_size = process.size
@@ -120,11 +131,11 @@ class VirtualMemory:
 
         if self.test_virtual_allocation(process_size):
 
-            self.process_map[process] = self.push_pages_to_memory(process_size)
-            self.on_memory_pages += len(self.process_map[process])
-            self.total_used_pages += len(self.process_map[process])
+            self.process_map[process.id] = self.push_pages_to_memory(process_size)
+            self.active_pages += len(self.process_map[process.id])
+            self.total_used_pages += len(self.process_map[process.id])
 
-            print(f"Used pages {self.on_memory_pages}")
+            print(f"Pages on memory: {self.active_pages}")
             print(f"Available Pages: {self.get_available_pages()}")
             time.sleep(3)
         else:
@@ -140,11 +151,13 @@ class VirtualMemory:
         print('-' * 20)
         print(f"Total Capacity: {self.initial_size}MBs")
         print(f"Total Initial Pages {self.total_pages}")
-        print(f"Pages on Memory {self.on_memory_pages}")
+        print(f"Pages on Memory {self.active_pages}")
         print(f"Total on SWAP {len(SWAP)}")
-        print(f"Total pages {self.on_memory_pages+len(SWAP)}")
+        print(f"Total pages {self.active_pages + len(SWAP)}")
+        print(f"Total page miss {self.page_misses}")
         print('-' * 20, end='')
         print("END VIRTUAL MEMORY STATUS", end='')
         print('-' * 20)
+
 
 print(F"SWAP MEMORY: {SWAP}")
