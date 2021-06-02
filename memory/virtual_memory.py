@@ -57,7 +57,6 @@ class VirtualMemory:
 
     def __init__(self, maximum_physical_size, maximum_virtual_size, page_size):
 
-        self.n_pages = int(maximum_virtual_size / page_size)
         self.initial_size = maximum_virtual_size
         self.available_size = maximum_virtual_size
         self.page_map = {}
@@ -74,7 +73,7 @@ class VirtualMemory:
         return self.calculate_pages(process_size) * self.page_size < self.physical_memory.available_capacity
 
     def test_virtual_allocation(self, process_size):
-        return self.total_pages >= self.active_pages + self.calculate_pages(process_size)
+        return self.total_pages > self.active_pages + self.calculate_pages(process_size)
 
     def calculate_pages(self, process_size):
         return math.ceil(process_size / self.page_size)
