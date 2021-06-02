@@ -72,7 +72,7 @@ elif args.mode == 3:
         vi_mem = VirtualMemory(MAXIMUM_PHYSICAL_MEMORY,MAXIMUM_VIRTUAL_MEMORY, PAGE_SIZE)
         for process_ in process_list:
             vi_mem.allocate(process_)
-        print("Loading process from the memory", end='')
+        print("LOADING PROCESS", end='')
         print("-"*40)
         for process_ in process_list:
             print(f'Loading the process {process_.name} from the Memory')
