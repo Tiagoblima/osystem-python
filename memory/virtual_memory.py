@@ -81,8 +81,10 @@ class VirtualMemory:
 
     def push_pages_to_memory(self, process_size):
         pages_allocated = []
-
-        for p_id in range(self.total_used_pages, self.total_used_pages + self.calculate_pages(process_size)):
+        print(f"Number of necessary pages: {self.calculate_pages(process_size)}")
+        end_pages = self.total_used_pages + self.calculate_pages(process_size) + 1
+        time.sleep(3)
+        for p_id in range(self.total_used_pages, end_pages):
             print(f"Creating page: {p_id}")
             page = Page(f"page_{p_id}", p_id)
             process_size = page.push_item(process_size)
@@ -144,6 +146,10 @@ class VirtualMemory:
             time.sleep(3)
             self.replace_page(process_size)
             self.allocate(process)
+        print()
+        print('-' * 20, end='')
+        print("END VIRTUAL MEMORY ALLOCATION", end='')
+        print('-' * 20)
 
     def memory_status(self):
         print('-' * 20, end='')
