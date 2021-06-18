@@ -1,5 +1,26 @@
 ## Prática de Sistema de Arquivos
 
+
+**Comandos**
+
+Criar um arquivo
+
+    --path usr/myfile.txt --size 10 
+
+Ver um arquivo
+
+    --path usr/myfile.txt --get_file
+
+Listar diretório
+
+    --path usr/ --list_dir
+
+Criar diretório
+
+    --path usr/new_folder --is_folder
+
+
+
 Individualmente (ou em dupla), implemente (com qualquer linguagem de programação a sua escolha e sem necessidade de interface gráfica) e apresente (gravando vídeo explicando código e execução):
 
 Um "mini" simulador de sistemas de arquivos deve ser implementado. Para isso, a equipe deverá simular UM mecanismo de alocação a sua escolha (encadeada, indexada, FAT, NTFS, etc.) e permitir que um usuário:
@@ -19,6 +40,9 @@ Um "mini" simulador de sistemas de arquivos deve ser implementado. Para isso, a 
 7. Indicar se há fragmentação interna ou externa (quando ocorrer).
 
 
+
+
+
 **Critérios de avaliação:**
 
 Nível de originalidade/autenticidade
@@ -28,3 +52,5 @@ Complexidade dos algoritmos implementados (quanto mais fácil o algoritmo escolh
 Onde cada critério acima terá a escala: 1 - Excelente, 0,75 - Bom, 0,5 - regular, 0,25 - ruim, 0 - péssimo. A nota da atividade será individual (se feita em dupla, cada integrante deverá apresentar sua parte) com escala de 0 a 10 conforme tais critérios.
 
 Para melhor entendimento da prática, vocês podem utilizar o simulador https://sourceforge.net/projects/oscsimulator/ - OS Sim e/ou ver o vídeo: 
+
+
