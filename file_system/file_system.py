@@ -235,7 +235,7 @@ def main():
         file_sys.show_allocation()
         file_sys.show_status()
     else:
-        now = datetime.now()
+        now = datetime.datetime.now()
 
         # dd/mm/YY H:M:S
         dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
