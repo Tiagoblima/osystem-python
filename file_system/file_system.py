@@ -1,4 +1,5 @@
 import argparse
+import datetime
 import math
 import os
 import json
@@ -112,6 +113,7 @@ class FileSystem:
 
         else:
             element_info["archives"] = {}
+
             for i, path_part in enumerate(path):
                 search_dir = self.directores
                 if i == len(path) - 2:
@@ -121,6 +123,27 @@ class FileSystem:
                     else:
                         raise Warning("Name already exists file or director not created!")
                     break
+
+    def delete(self, archive_path):
+
+        try:
+            path = archive_path.split('/')
+
+            search_dir = self.directores
+            for i, path_part in enumerate(path):
+                if i == len(path) - 1:
+                    break
+                else:
+                    search_dir = search_dir[path_part]["archives"]
+            element_info = search_dir[path[-1]]
+            search_dir.pop(path[-1])
+            search_dir = self.directores
+            for part_path in path[:-1]:
+                search_dir[part_path]["size"] -= element_info["size"]
+                search_dir = search_dir[part_path]["archives"]
+            return search_dir
+        except KeyError:
+            print("File or Dir does not exists!")
 
     def get_file(self, file_path):
 
@@ -132,13 +155,14 @@ class FileSystem:
                 search_dir = search_dir[path_part]
             else:
                 search_dir = search_dir[path_part]["archives"]
+
         return search_dir
 
     def show_allocation(self):
 
-        print("#"*20, end='')
-        print("Allocation")
-        print("#"*20, end='')
+        print("#" * 20, end='')
+        print("Allocation", end='')
+        print("#" * 20)
 
         your_json = json.dumps(self.directores)
 
@@ -156,9 +180,8 @@ class FileSystem:
         print(json.dumps(parsed, indent=4, sort_keys=True))
 
     def show_status(self):
-        consumed_capacity = len(self.memory) * Block.CAPACITY
-        print(f"Consumed capacity: {consumed_capacity / self.TOTAL_CAPACITY}%")
-        print(f"Number of blocks allocated: {len(self.memory)}")
+
+        print(f"Consumed capacity: {self.directores['usr']['size'] / self.TOTAL_CAPACITY}%")
 
     def save_status(self):
         your_json = json.dumps(self.directores)
@@ -175,9 +198,11 @@ parser.add_argument('--get_file', action="store_true", required=False, help="Opt
 
 parser.add_argument('--is_folder', action="store_true")
 
-parser.add_argument('--size', type=int, help="The size of"
-                                             "the file is required"
-                                             "when you want to allocate a file ")
+parser.add_argument('--delete', action="store_true")
+# Default size of a folder is 10
+parser.add_argument('--size', type=int, default=10, help="The size of"
+                                                         "the file is required"
+                                                         "when you want to allocate a file ")
 args = parser.parse_args()
 
 
@@ -205,13 +230,22 @@ def main():
         your_json = json.dumps(file)
         parsed = json.loads(your_json)
         print(json.dumps(parsed, indent=4, sort_keys=True))
+    elif args.delete:
+        file_sys.delete(args.path)
+        file_sys.show_allocation()
+        file_sys.show_status()
     else:
+        now = datetime.now()
+
+        # dd/mm/YY H:M:S
+        dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
         name = args.path.split('/')[-1]
-        file_sys.allocate(args.path, {"name": name, "size": args.size, "is_dir": args.is_folder})
+        file_sys.allocate(args.path,
+                          {"name": name, "size": args.size, "time_stamp": dt_string, "is_dir": args.is_folder})
 
         file_sys.show_allocation()
         file_sys.show_status()
-        file_sys.save_status()
+    file_sys.save_status()
 
 
 if __name__ == '__main__':

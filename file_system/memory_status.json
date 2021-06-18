@@ -2,27 +2,7 @@
     "usr": {
         "archives": {
             "sys": {
-                "archives": {
-                    "myfile.txt": {
-                        "block": [
-                            {
-                                "block_id": 499,
-                                "space_available": 0
-                            },
-                            {
-                                "block_id": 745,
-                                "space_available": 0
-                            },
-                            {
-                                "block_id": 679,
-                                "space_available": 5
-                            }
-                        ],
-                        "is_dir": false,
-                        "name": "myfile.txt",
-                        "size": 25
-                    }
-                },
+                "archives": {},
                 "block": [
                     {
                         "block_id": 747,
@@ -31,7 +11,7 @@
                 ],
                 "is_dir": true,
                 "name": "sys",
-                "size": 35
+                "size": 10
             },
             "system.txt": {
                 "block": [
@@ -56,6 +36,6 @@
             }
         ],
         "nome": "usr",
-        "size": 45
+        "size": 10
     }
 }
