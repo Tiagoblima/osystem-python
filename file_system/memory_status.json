@@ -1,0 +1,61 @@
+{
+    "usr": {
+        "archives": {
+            "sys": {
+                "archives": {
+                    "myfile.txt": {
+                        "block": [
+                            {
+                                "block_id": 499,
+                                "space_available": 0
+                            },
+                            {
+                                "block_id": 745,
+                                "space_available": 0
+                            },
+                            {
+                                "block_id": 679,
+                                "space_available": 5
+                            }
+                        ],
+                        "is_dir": false,
+                        "name": "myfile.txt",
+                        "size": 25
+                    }
+                },
+                "block": [
+                    {
+                        "block_id": 747,
+                        "space_available": 0
+                    }
+                ],
+                "is_dir": true,
+                "name": "sys",
+                "size": 35
+            },
+            "system.txt": {
+                "block": [
+                    {
+                        "block_id": 8823,
+                        "space_available": 0
+                    }
+                ],
+                "is_dir": false,
+                "name": "system.txt",
+                "size": 10
+            }
+        },
+        "block": [
+            {
+                "block_id": 7018,
+                "space_available": 0
+            },
+            {
+                "block_id": 3530,
+                "space_available": 0
+            }
+        ],
+        "nome": "usr",
+        "size": 45
+    }
+}

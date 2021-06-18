@@ -29,7 +29,7 @@ class Block:
 
     def fragmentation_status(self):
         print()
-        print(f"PAGE-{self.id} FRAGMENTATION STATUS", end='')
+        print(f"BLOCK-{self.id} FRAGMENTATION STATUS", end='')
         print('-' * 20)
         if self.size > 0:
             print("\tInternal Fragmentation")
@@ -68,49 +68,12 @@ class FileSystem:
     def __init__(self):
         self.memory = []
         inode = str(uuid.uuid1())
-        self.inode_map = {
-            "usr/system.txt": inode
-        }
-        block1 = Block(random.randint(0, 10000))
-        block2 = Block(random.randint(0, 10000))
-        block1.push_item(10)
-        block2.push_item(10)
 
-        root_blocks = [block1.block_info(), block2.block_info()]
-
-        self.memory.extend(root_blocks)
-        block1 = Block(random.randint(0, 10000))
-        block2 = Block(random.randint(0, 10000))
-        block1.push_item(10)
-        block2.push_item(10)
-
-        self.memory.append(block1)
-        self.memory.append(block2)
-
-        self.directores = {
-
-            self.ROOT_DIR: {
-                "nome": self.ROOT_DIR, "size": 20, "block": root_blocks,
-                "archives":
-                    {
-                        inode: {
-                            "size": 10,
-                            "name": "system.txt",
-                            "block": [block1.block_info()]
-                        },
-                        "sys":
-                            {
-                                "size": 10,
-                                "name": "sys",
-                                "archives": {},
-                                "block": [block2.block_info()]
-                            }
-                    }
-            }
-        }
+        self.directores = json.load(open("memory_status.json"))
         self.current_dir = self.ROOT_DIR
 
-    def allocate(self, path_to_element, element_info, is_dir=False):
+    def allocate(self, path_to_element, element_info):
+        is_dir = element_info["is_dir"]
         path = path_to_element.split('/')
 
         if len(path) == 1:
@@ -120,7 +83,7 @@ class FileSystem:
             for i, path_part in enumerate(path):
 
                 if i == len(path) - 2:
-                    inode = str(uuid.uuid1())
+                    inode = element_info["name"]
 
                     if not name_exists(search_dir[path_part]["archives"], element_info):
                         element_info["block"] = []
@@ -131,8 +94,9 @@ class FileSystem:
                             element_info["block"].append(block.block_info())
                             space_required -= block.CAPACITY
                             self.memory.append(block)
+
                         search_dir[path_part]["archives"][inode] = element_info
-                        self.inode_map[path_to_element] = inode
+
 
                     else:
                         raise Warning("Name already exists file or director not created!")
@@ -147,21 +111,47 @@ class FileSystem:
                 search_dir = search_dir[part_path]["archives"]
 
         else:
+            element_info["archives"] = {}
             for i, path_part in enumerate(path):
                 search_dir = self.directores
                 if i == len(path) - 2:
 
                     if not name_exists(search_dir[path_part]["archives"], element_info):
                         search_dir[path_part]["archives"][path[-1]] = element_info
-                        self.inode_map[path_to_element] = path[-1]
-
                     else:
                         raise Warning("Name already exists file or director not created!")
                     break
 
+    def get_file(self, file_path):
+
+        path = file_path.split('/')
+
+        search_dir = self.directores
+        for i, path_part in enumerate(path):
+            if i == len(path) - 1:
+                search_dir = search_dir[path_part]
+            else:
+                search_dir = search_dir[path_part]["archives"]
+        return search_dir
+
     def show_allocation(self):
+
+        print("#"*20, end='')
+        print("Allocation")
+        print("#"*20, end='')
+
         your_json = json.dumps(self.directores)
 
+        parsed = json.loads(your_json)
+        print(json.dumps(parsed, indent=4, sort_keys=True))
+
+    def list_dir(self, dir_):
+        path = dir_.split('/')
+        search_dir = self.directores
+        for i, path_part in enumerate(path):
+            search_dir = search_dir[path_part]["archives"]
+
+        your_json = json.dumps(search_dir)
         parsed = json.loads(your_json)
         print(json.dumps(parsed, indent=4, sort_keys=True))
 
@@ -170,13 +160,20 @@ class FileSystem:
         print(f"Consumed capacity: {consumed_capacity / self.TOTAL_CAPACITY}%")
         print(f"Number of blocks allocated: {len(self.memory)}")
 
+    def save_status(self):
+        your_json = json.dumps(self.directores)
+        parsed = json.loads(your_json)
+        json.dump(parsed, open("memory_status.json", "w", encoding="utf-8"), indent=4, sort_keys=True)
+
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--path', type=str, required=True, help="The path to the file or folder.")
-parser.add_argument('--name', type=str, required=True, help="The name of the file or folder.")
 
-parser.add_argument('--add_file', action="store_true")
-parser.add_argument('--add_folder', type=str)
+parser.add_argument('--list_dir', action="store_true", required=False, help="Option to list the dir.")
+
+parser.add_argument('--get_file', action="store_true", required=False, help="Option to list the dir.")
+
+parser.add_argument('--is_folder', action="store_true")
 
 parser.add_argument('--size', type=int, help="The size of"
                                              "the file is required"
@@ -186,27 +183,35 @@ args = parser.parse_args()
 
 def demo():
     file_sys = FileSystem()
-    # file_sys.show_allocation()
+    file_sys.show_allocation()
     file_sys.allocate("usr/sys/myfile.txt", {"name": "myfile.txt", "size": 10})
     file_sys.allocate("usr/sys/myfile1.txt", {"name": "myfile1.txt", "size": 25})
-    # file_sys.show_allocation()
-    file_sys.allocate("usr/myfile", {"name": "myfile", "size": 10, "archives": {}}, is_dir=True)
+    file_sys.show_allocation()
+    file_sys.allocate("usr/myfile", {"name": "myfile", "size": 10, "archives": {}})
     file_sys.show_allocation()
     file_sys.show_status()
+    file_sys.save_status()
 
 
 def main():
     file_sys = FileSystem()
     # file_sys.show_allocation()
 
-    if args.add_file:
-        file_sys.allocate(args.path, {"name": args.name, "size": args.size})
+    if args.list_dir:
+        file_sys.list_dir(args.path)
 
-    if args.add_folder:
-        file_sys.allocate(args.path, {"name": args.name, "size": 10, "archives": {}}, is_dir=True)
+    elif args.get_file:
+        file = file_sys.get_file(args.path)
+        your_json = json.dumps(file)
+        parsed = json.loads(your_json)
+        print(json.dumps(parsed, indent=4, sort_keys=True))
+    else:
+        name = args.path.split('/')[-1]
+        file_sys.allocate(args.path, {"name": name, "size": args.size, "is_dir": args.is_folder})
 
-    file_sys.show_allocation()
-    file_sys.show_status()
+        file_sys.show_allocation()
+        file_sys.show_status()
+        file_sys.save_status()
 
 
 if __name__ == '__main__':
