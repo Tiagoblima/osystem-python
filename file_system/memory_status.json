@@ -1,6 +1,50 @@
 {
     "usr": {
         "archives": {
+            "my_folder": {
+                "archives": {
+                    "myfile.txt": {
+                        "block": [
+                            {
+                                "block_id": 546,
+                                "space_available": 0
+                            },
+                            {
+                                "block_id": 600,
+                                "space_available": 0
+                            },
+                            {
+                                "block_id": 791,
+                                "space_available": 0
+                            },
+                            {
+                                "block_id": 279,
+                                "space_available": 7
+                            }
+                        ],
+                        "is_dir": false,
+                        "name": "myfile.txt",
+                        "size": 33,
+                        "time_stamp": "18/06/2021 20:52:39"
+                    }
+                },
+                "is_dir": true,
+                "name": "my_folder",
+                "size": 43,
+                "time_stamp": "18/06/2021 20:49:14"
+            },
+            "myfile.txt": {
+                "block": [
+                    {
+                        "block_id": 880,
+                        "space_available": 0
+                    }
+                ],
+                "is_dir": false,
+                "name": "myfile.txt",
+                "size": 10,
+                "time_stamp": "18/06/2021 20:47:31"
+            },
             "sys": {
                 "archives": {},
                 "block": [
@@ -36,6 +80,6 @@
             }
         ],
         "nome": "usr",
-        "size": 10
+        "size": 53
     }
 }

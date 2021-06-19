@@ -1,7 +1,9 @@
 ## Prática de Sistema de Arquivos
 
+*Link para o vídeo explicativo:* [Meu Vídeo](https://drive.google.com/file/d/1Q6tC0LU7vvDs9TKDjTnlLEZwgWSmkTxJ/view?usp=sharing) 
 
-**Comandos**
+
+### Comandos
 
 Criar um arquivo
 
