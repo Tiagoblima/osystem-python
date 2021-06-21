@@ -68,7 +68,6 @@ class FileSystem:
 
     def __init__(self):
         self.memory = []
-        inode = str(uuid.uuid1())
 
         self.directores = json.load(open("memory_status.json"))
         self.current_dir = self.ROOT_DIR
@@ -80,11 +79,13 @@ class FileSystem:
             search_dir = search_dir[key]["archives"]
             for key2 in search_dir.keys():
                 self.existing_names.append(key2)
+        print(self.existing_names)
 
     def allocate(self, path_to_element, element_info):
         is_dir = element_info["is_dir"]
         path = path_to_element.split('/')
-
+        if element_info["name"] in self.existing_names:
+            raise Warning("Name already exists file or director not created!")
         if len(path) == 1:
             self.directores[self.current_dir][path[0]] = element_info
         elif not is_dir:
@@ -126,16 +127,19 @@ class FileSystem:
 
         else:
             element_info["archives"] = {}
-
+            search_dir = self.directores
             for i, path_part in enumerate(path):
-                search_dir = self.directores
-                if i == len(path) - 2:
 
+                if i >= len(path) - 2:
+                    print(search_dir)
                     if not name_exists(search_dir[path_part]["archives"], element_info):
                         search_dir[path_part]["archives"][path[-1]] = element_info
                     else:
                         raise Warning("Name already exists file or director not created!")
                     break
+                else:
+
+                    search_dir = search_dir[path_part]["archives"]
 
     def delete(self, archive_path):
 
