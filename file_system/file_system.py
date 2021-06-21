@@ -72,6 +72,14 @@ class FileSystem:
 
         self.directores = json.load(open("memory_status.json"))
         self.current_dir = self.ROOT_DIR
+        self.existing_names = []
+        search_dir = self.directores
+
+        for key in self.directores.keys():
+            self.existing_names.append(key)
+            search_dir = search_dir[key]["archives"]
+            for key2 in search_dir.keys():
+                self.existing_names.append(key2)
 
     def allocate(self, path_to_element, element_info):
         is_dir = element_info["is_dir"]
@@ -90,14 +98,19 @@ class FileSystem:
                         element_info["block"] = []
                         space_required = element_info["size"]
                         for elem in range(math.ceil(element_info["size"] / Block.CAPACITY)):
-                            block = Block(random.randint(0, 1000))
+
+                            # Evita mesmo id de bloco
+                            block_id = random.randint(0, 1000)
+                            while block_id in self.memory:
+                                block_id = random.randint(0, 1000)
+
+                            block = Block(block_id)
                             block.push_item(space_required)
                             element_info["block"].append(block.block_info())
                             space_required -= block.CAPACITY
-                            self.memory.append(block)
+                            self.memory.append(block_id)
 
                         search_dir[path_part]["archives"][inode] = element_info
-
 
                     else:
                         raise Warning("Name already exists file or director not created!")
