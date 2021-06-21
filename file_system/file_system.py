@@ -81,9 +81,33 @@ class FileSystem:
                 self.existing_names.append(key2)
         print(self.existing_names)
 
+    def set_blocks(self, element_info):
+        element_info["block"] = []
+
+        space_required = element_info["size"]
+        for elem in range(math.ceil(element_info["size"] / Block.CAPACITY)):
+
+            # Evita mesmo id de bloco
+            block_id = random.randint(0, 1000)
+            while block_id in self.memory:
+                block_id = random.randint(0, 1000)
+
+            block = Block(block_id)
+            block.push_item(space_required)
+            element_info["block"].append(block.block_info())
+            space_required -= block.CAPACITY
+            self.memory.append(block_id)
+        return element_info
+
     def allocate(self, path_to_element, element_info):
         is_dir = element_info["is_dir"]
         path = path_to_element.split('/')
+
+        if len(path) == 1:
+            path = ['usr', path[0]]
+
+        element_info = self.set_blocks(element_info)
+
         if element_info["name"] in self.existing_names:
             raise Warning("Name already exists file or director not created!")
         if len(path) == 1:
@@ -95,26 +119,7 @@ class FileSystem:
                 if i == len(path) - 2:
                     inode = element_info["name"]
 
-                    if not name_exists(search_dir[path_part]["archives"], element_info):
-                        element_info["block"] = []
-                        space_required = element_info["size"]
-                        for elem in range(math.ceil(element_info["size"] / Block.CAPACITY)):
-
-                            # Evita mesmo id de bloco
-                            block_id = random.randint(0, 1000)
-                            while block_id in self.memory:
-                                block_id = random.randint(0, 1000)
-
-                            block = Block(block_id)
-                            block.push_item(space_required)
-                            element_info["block"].append(block.block_info())
-                            space_required -= block.CAPACITY
-                            self.memory.append(block_id)
-
-                        search_dir[path_part]["archives"][inode] = element_info
-
-                    else:
-                        raise Warning("Name already exists file or director not created!")
+                    search_dir[path_part]["archives"][inode] = element_info
                     break
                 else:
 
@@ -128,17 +133,14 @@ class FileSystem:
         else:
             element_info["archives"] = {}
             search_dir = self.directores
+
             for i, path_part in enumerate(path):
 
-                if i >= len(path) - 2:
-                    print(search_dir)
-                    if not name_exists(search_dir[path_part]["archives"], element_info):
-                        search_dir[path_part]["archives"][path[-1]] = element_info
-                    else:
-                        raise Warning("Name already exists file or director not created!")
+                if i == len(path) - 2:
+                    print(path_part)
+                    search_dir[path_part]["archives"] = {path[-1]: element_info}
                     break
                 else:
-
                     search_dir = search_dir[path_part]["archives"]
 
     def delete(self, archive_path):
