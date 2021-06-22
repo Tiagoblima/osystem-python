@@ -20,6 +20,7 @@ a. Estabelecer o tamanho máximo de memória física (em qualquer unidade, MB, K
 b. Estabelecer o tamanho máximo de memória virtual (maior que a memória física e na mesma unidade)
 
 c. Definir previamente o tamanho das páginas (na mesma unidade que a memória física/virtual) 
+
 e calcular/alocar a quantidade de páginas necessárias a um processo a depender de seu tamanho
 
 d. Definir um processo de duração "infinita" (thread ou simulado) com nome, ID, tamanho (na mesma unidade que a memória física), etc.

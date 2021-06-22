@@ -1,11 +1,9 @@
 import argparse
 import datetime
-import math
-import os
 import json
+import math
 import random
 import time
-import uuid
 
 
 def name_exists(dir_, element_info):
@@ -45,7 +43,7 @@ class Block:
     def push_item(self, space_required):
         remaining_size = 0
         if space_required >= self.size:
-            remaining_size = space_required - self.size
+            remaining_size = space_required - self.size # Alocando arquivo no bloco
             self.size = 0
             self.available = False
 
@@ -93,13 +91,15 @@ class FileSystem:
                 block_id = random.randint(0, 1000)
 
             block = Block(block_id)
-            block.push_item(space_required)
+            space_required = block.push_item(space_required)
             element_info["block"].append(block.block_info())
-            space_required -= block.CAPACITY
+
             self.memory.append(block_id)
+
         return element_info
 
     def allocate(self, path_to_element, element_info):
+
         is_dir = element_info["is_dir"]
         path = path_to_element.split('/')
 
@@ -112,11 +112,12 @@ class FileSystem:
             raise Warning("Name already exists file or director not created!")
         if len(path) == 1:
             self.directores[self.current_dir][path[0]] = element_info
+        # usr/sys/
         elif not is_dir:
             search_dir = self.directores
             for i, path_part in enumerate(path):
 
-                if i == len(path) - 2:
+                if i == len(path) - 2: # Achou diretório final
                     inode = element_info["name"]
 
                     search_dir[path_part]["archives"][inode] = element_info
@@ -190,6 +191,7 @@ class FileSystem:
 
     def list_dir(self, dir_):
         path = dir_.split('/')
+
         search_dir = self.directores
         for i, path_part in enumerate(path):
             search_dir = search_dir[path_part]["archives"]
