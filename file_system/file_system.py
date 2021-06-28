@@ -43,7 +43,7 @@ class Block:
     def push_item(self, space_required):
         remaining_size = 0
         if space_required >= self.size:
-            remaining_size = space_required - self.size # Alocando arquivo no bloco
+            remaining_size = space_required - self.size  # Alocando arquivo no bloco
             self.size = 0
             self.available = False
 
@@ -67,12 +67,12 @@ class FileSystem:
     def __init__(self):
         self.memory = []
 
-        self.directores = json.load(open("memory_status.json"))
+        self.disk_1 = json.load(open("disk_1_status.json"))
         self.current_dir = self.ROOT_DIR
         self.existing_names = []
-        search_dir = self.directores
+        search_dir = self.disk_1
 
-        for key in self.directores.keys():
+        for key in self.disk_1.keys():
             self.existing_names.append(key)
             search_dir = search_dir[key]["archives"]
             for key2 in search_dir.keys():
@@ -111,21 +111,22 @@ class FileSystem:
         if element_info["name"] in self.existing_names:
             raise Warning("Name already exists file or director not created!")
         if len(path) == 1:
-            self.directores[self.current_dir][path[0]] = element_info
+            self.disk_1[self.current_dir][path[0]] = element_info
         # usr/sys/
         elif not is_dir:
-            search_dir = self.directores
+            search_dir = self.disk_1
             for i, path_part in enumerate(path):
 
-                if i == len(path) - 2: # Achou diretório final
+                if i == len(path) - 2:  # Achou diretório final
                     inode = element_info["name"]
 
                     search_dir[path_part]["archives"][inode] = element_info
+
                     break
                 else:
 
                     search_dir = search_dir[path_part]["archives"]
-            search_dir = self.directores
+            search_dir = self.disk_1
             time.sleep(3)
             for part_path in path[:-1]:
                 search_dir[part_path]["size"] += element_info["size"]
@@ -133,7 +134,7 @@ class FileSystem:
 
         else:
             element_info["archives"] = {}
-            search_dir = self.directores
+            search_dir = self.disk_1
 
             for i, path_part in enumerate(path):
 
@@ -149,7 +150,7 @@ class FileSystem:
         try:
             path = archive_path.split('/')
 
-            search_dir = self.directores
+            search_dir = self.disk_1
             for i, path_part in enumerate(path):
                 if i == len(path) - 1:
                     break
@@ -157,7 +158,7 @@ class FileSystem:
                     search_dir = search_dir[path_part]["archives"]
             element_info = search_dir[path[-1]]
             search_dir.pop(path[-1])
-            search_dir = self.directores
+            search_dir = self.disk_1
             for part_path in path[:-1]:
                 search_dir[part_path]["size"] -= element_info["size"]
                 search_dir = search_dir[part_path]["archives"]
@@ -169,7 +170,7 @@ class FileSystem:
 
         path = file_path.split('/')
 
-        search_dir = self.directores
+        search_dir = self.disk_1
         for i, path_part in enumerate(path):
             if i == len(path) - 1:
                 search_dir = search_dir[path_part]
@@ -184,7 +185,7 @@ class FileSystem:
         print("Allocation", end='')
         print("#" * 20)
 
-        your_json = json.dumps(self.directores)
+        your_json = json.dumps(self.disk_1)
 
         parsed = json.loads(your_json)
         print(json.dumps(parsed, indent=4, sort_keys=True))
@@ -192,7 +193,7 @@ class FileSystem:
     def list_dir(self, dir_):
         path = dir_.split('/')
 
-        search_dir = self.directores
+        search_dir = self.disk_1
         for i, path_part in enumerate(path):
             search_dir = search_dir[path_part]["archives"]
 
@@ -202,12 +203,15 @@ class FileSystem:
 
     def show_status(self):
 
-        print(f"Consumed capacity: {self.directores['usr']['size'] / self.TOTAL_CAPACITY}%")
+        print(f"Consumed capacity: {self.disk_1['usr']['size'] / self.TOTAL_CAPACITY}%")
 
     def save_status(self):
-        your_json = json.dumps(self.directores)
+        your_json = json.dumps(self.disk_1)
         parsed = json.loads(your_json)
-        json.dump(parsed, open("memory_status.json", "w", encoding="utf-8"), indent=4, sort_keys=True)
+        print("Saving on the Main Disk")
+        json.dump(parsed, open("disk_1_status.json", "w", encoding="utf-8"), indent=4, sort_keys=True)
+        print("RAID 1: Saving on backup")
+        json.dump(parsed, open("disk_2_status.json", "w", encoding="utf-8"), indent=4, sort_keys=True)
 
 
 parser = argparse.ArgumentParser()
