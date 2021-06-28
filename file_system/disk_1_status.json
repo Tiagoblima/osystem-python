@@ -13,6 +13,18 @@
                 "size": 10,
                 "time_stamp": "28/06/2021 13:55:01"
             },
+            "myfile1.txt": {
+                "block": [
+                    {
+                        "block_id": 387,
+                        "space_available": 0
+                    }
+                ],
+                "is_dir": false,
+                "name": "myfile1.txt",
+                "size": 10,
+                "time_stamp": "28/06/2021 19:47:28"
+            },
             "sys": {
                 "archives": {},
                 "block": [
@@ -48,6 +60,6 @@
             }
         ],
         "nome": "usr",
-        "size": 10
+        "size": 20
     }
 }
