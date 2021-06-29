@@ -1,3 +1,4 @@
+import argparse
 import random
 
 UT = 1  # unit time (S)
@@ -20,8 +21,14 @@ class System:
         seek_time_list = []
         for i, _ in ordered:
             block = block_list[i]
-            req_time = random.randrange(UT, 5)
-            print(f"BLOCK: {block} Request Time: ", req_time)
+
+            if i != 0:
+                last_block = block_list[i - 1]
+                req_time = abs(block - last_block) * UT
+            else:
+                req_time = UT
+
+            print(f"BLOCK: {block} Request Time: {req_time}s")
             seek_time_list.append(req_time)
             self.disk.index(block)
 
@@ -36,4 +43,17 @@ def demo():
     sys_io.seek_blocks(block_seq)
 
 
-demo()
+# demo()
+parser = argparse.ArgumentParser()
+parser.add_argument('--blocks', metavar='N', type=int, nargs='+',
+                    help='an integer for the accumulator')
+args = parser.parse_args()
+
+
+def main():
+    sys_io = System()
+    sys_io.seek_blocks(args.blocks)
+
+
+if __name__ == '__main__':
+    main()
