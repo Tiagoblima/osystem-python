@@ -4,26 +4,22 @@
             "myfile.txt": {
                 "block": [
                     {
-                        "block_id": 424,
+                        "block_id": 682,
                         "space_available": 0
+                    },
+                    {
+                        "block_id": 628,
+                        "space_available": 0
+                    },
+                    {
+                        "block_id": 514,
+                        "space_available": 5
                     }
                 ],
                 "is_dir": false,
                 "name": "myfile.txt",
-                "size": 10,
-                "time_stamp": "28/06/2021 13:55:01"
-            },
-            "myfile1.txt": {
-                "block": [
-                    {
-                        "block_id": 387,
-                        "space_available": 0
-                    }
-                ],
-                "is_dir": false,
-                "name": "myfile1.txt",
-                "size": 10,
-                "time_stamp": "28/06/2021 19:47:28"
+                "size": 25,
+                "time_stamp": "29/06/2021 20:09:06"
             },
             "sys": {
                 "archives": {},
@@ -47,6 +43,34 @@
                 "is_dir": false,
                 "name": "system.txt",
                 "size": 10
+            },
+            "text.txt": {
+                "block": [
+                    {
+                        "block_id": 880,
+                        "space_available": 0
+                    },
+                    {
+                        "block_id": 797,
+                        "space_available": 0
+                    },
+                    {
+                        "block_id": 317,
+                        "space_available": 0
+                    },
+                    {
+                        "block_id": 157,
+                        "space_available": 0
+                    },
+                    {
+                        "block_id": 491,
+                        "space_available": 5
+                    }
+                ],
+                "is_dir": false,
+                "name": "text.txt",
+                "size": 45,
+                "time_stamp": "01/07/2021 13:42:53"
             }
         },
         "block": [
@@ -60,6 +84,6 @@
             }
         ],
         "nome": "usr",
-        "size": 20
+        "size": 90
     }
 }

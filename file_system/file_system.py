@@ -4,6 +4,9 @@ import json
 import math
 import random
 import time
+from io_system.io_system import System
+
+io = System()
 
 
 def name_exists(dir_, element_info):
@@ -149,7 +152,8 @@ class FileSystem:
 
         try:
             path = archive_path.split('/')
-
+            if len(path) == 1:
+                path = ['usr', path[0]]
             search_dir = self.disk_1
             for i, path_part in enumerate(path):
                 if i == len(path) - 1:
@@ -170,12 +174,18 @@ class FileSystem:
 
         path = file_path.split('/')
 
+        if len(path) == 1:
+            path = ['usr', path[0]]
+
         search_dir = self.disk_1
         for i, path_part in enumerate(path):
             if i == len(path) - 1:
                 search_dir = search_dir[path_part]
             else:
                 search_dir = search_dir[path_part]["archives"]
+
+        block_list = [block["block_id"] for block in search_dir["block"]]
+        io.seek_blocks(block_list)
 
         return search_dir
 
@@ -259,6 +269,7 @@ def main():
         file_sys.delete(args.path)
         file_sys.show_allocation()
         file_sys.show_status()
+        file_sys.save_status()
     else:
         now = datetime.datetime.now()
 
@@ -270,7 +281,7 @@ def main():
 
         file_sys.show_allocation()
         file_sys.show_status()
-    file_sys.save_status()
+        file_sys.save_status()
 
 
 if __name__ == '__main__':

@@ -14,7 +14,7 @@ class System:
 
     def seek_blocks(self, block_list):
         first = block_list[0]
-        print("blocks to seek: ", block_list)
+
         ordered = [(i, abs(first - block)) for i, block in enumerate(block_list)]
         ordered = sorted(ordered, key=lambda tup: tup[1])
         block_access = []
@@ -44,16 +44,16 @@ def demo():
 
 
 # demo()
-parser = argparse.ArgumentParser()
-parser.add_argument('--blocks', metavar='N', type=int, nargs='+',
-                    help='an integer for the accumulator')
-args = parser.parse_args()
+#parser = argparse.ArgumentParser()
+#parser.add_argument('--blocks', metavar='N', type=int, nargs='+',
+                  #  help='an integer for the accumulator')
+#args = parser.parse_args()
 
 
-def main():
-    sys_io = System()
-    sys_io.seek_blocks(args.blocks)
+#def main():
+  #  sys_io = System()
+  #  sys_io.seek_blocks(args.blocks)
 
 
-if __name__ == '__main__':
-    main()
+#if __name__ == '__main__':
+   # main()
