@@ -5,7 +5,7 @@ import math
 import random
 import time
 from io_system.io_system import System
-
+from io_system.io_system import MIN_BLOCK, MAX_BLOCK
 io = System()
 
 
@@ -89,9 +89,9 @@ class FileSystem:
         for elem in range(math.ceil(element_info["size"] / Block.CAPACITY)):
 
             # Evita mesmo id de bloco
-            block_id = random.randint(0, 1000)
+            block_id = random.randint(MIN_BLOCK, MAX_BLOCK)
             while block_id in self.memory:
-                block_id = random.randint(0, 1000)
+                block_id = random.randint(MIN_BLOCK, MAX_BLOCK)
 
             block = Block(block_id)
             space_required = block.push_item(space_required)
