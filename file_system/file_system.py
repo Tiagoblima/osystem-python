@@ -6,6 +6,9 @@ import random
 import time
 from io_system.io_system import System
 from io_system.io_system import MIN_BLOCK, MAX_BLOCK
+from security.security import cryptography
+from security.security import break_code
+
 io = System()
 
 
@@ -116,19 +119,19 @@ class FileSystem:
         if len(path) == 1:
             self.disk_1[self.current_dir][path[0]] = element_info
         # usr/sys/
+
         elif not is_dir:
+
             search_dir = self.disk_1
             for i, path_part in enumerate(path):
 
                 if i == len(path) - 2:  # Achou diretório final
                     inode = element_info["name"]
-
                     search_dir[path_part]["archives"][inode] = element_info
-
                     break
                 else:
-
                     search_dir = search_dir[path_part]["archives"]
+
             search_dir = self.disk_1
             time.sleep(3)
             for part_path in path[:-1]:
@@ -183,9 +186,14 @@ class FileSystem:
                 search_dir = search_dir[path_part]
             else:
                 search_dir = search_dir[path_part]["archives"]
-
-        block_list = [block["block_id"] for block in search_dir["block"]]
-        io.seek_blocks(block_list)
+        if search_dir["secure"]:
+            password_attempt = input('Insert password: ')
+            code = search_dir["password"]
+            if break_code(code, password_attempt):
+                block_list = [block["block_id"] for block in search_dir["block"]]
+                io.seek_blocks(block_list)
+            else:
+                print("Senha incorreta!")
 
         return search_dir
 
@@ -231,6 +239,8 @@ parser.add_argument('--list_dir', action="store_true", required=False, help="Opt
 
 parser.add_argument('--get_file', action="store_true", required=False, help="Option to list the dir.")
 
+parser.add_argument('--password', action="store_true", required=False, help="Chose use"
+                                                                            "password to secure the dir or file")
 parser.add_argument('--is_folder', action="store_true")
 
 parser.add_argument('--delete', action="store_true")
@@ -276,8 +286,20 @@ def main():
         # dd/mm/YY H:M:S
         dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
         name = args.path.split('/')[-1]
+        user_password = ""
+        if args.password:
+            user_password = input('Insert the your password: ')
+
+        element_info = {"name": name,
+                        "size": args.size,
+                        "secure": args.password,
+                        "user_password": cryptography(user_password),
+                        "time_stamp": dt_string,
+                        "is_dir": args.is_folder}
+
         file_sys.allocate(args.path,
-                          {"name": name, "size": args.size, "time_stamp": dt_string, "is_dir": args.is_folder})
+                          element_info
+                          )
 
         file_sys.show_allocation()
         file_sys.show_status()

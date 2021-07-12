@@ -26,13 +26,11 @@ def generate_hash():
 
 
 def break_code(code, true_word):
-    fails = []
-    random_code = [random.choice(code) for i in range(MAX_SIZE)]
+
     match_list = []
     matches = 0
-    start_time = time.time()
+
     while matches != len(code):
-        fails.append(random_code)
 
         random_code = random.choice(code)
         random_attempts = 0
@@ -43,8 +41,8 @@ def break_code(code, true_word):
                 return False
         match_list.insert(matches, random_code)
         matches += 1
-    total_time = time.time() - start_time
-    return total_time
+
+    return True
 
 
 # Técnica de Júlio Cesar
@@ -56,25 +54,3 @@ def cryptography(password, key=2):
         password[(MAX_SIZE - i) % MAX_SIZE] = aux
 
     return password
-
-
-def main():
-    true_password = list(input('Type a password: '))
-    # hash_table = generate_hash()
-    # print(len(hash_table))
-
-    # json.dump(hash_table, open('hash.json', 'w'), indent=4)
-
-    assert len(true_password) <= MAX_SIZE, f"Password must have size {MAX_SIZE}"
-
-    code = cryptography(true_password.copy())
-
-    print("Password: ", true_password)
-    print("Password codified: ", code)
-
-    total = break_code(code, true_password)
-    print("Spent time: ", total)
-
-
-if __name__ == '__main__':
-    main()
