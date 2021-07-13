@@ -36,6 +36,7 @@ def break_code(code, true_word):
     match_list = []
     matches = 0
     start_time = time.time()
+
     while matches != len(code):
         fails.append(random_code)
 

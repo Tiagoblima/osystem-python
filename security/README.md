@@ -1,5 +1,8 @@
 ## Prática de Segurança
 
+
+
+   
 Individualmente (ou em dupla), implemente (com qualquer linguagem de programação a sua escolha 
 e sem necessidade de interface gráfica) e apresente (gravando vídeo explicando código e
 execução):

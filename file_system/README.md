@@ -1,6 +1,11 @@
 ## Prática de Sistema de Arquivos
 
+### Sem password
 *Link para o vídeo explicativo:* [Meu Vídeo](https://drive.google.com/file/d/1Q6tC0LU7vvDs9TKDjTnlLEZwgWSmkTxJ/view?usp=sharing) 
+
+### Prática de segurança (com password)
+
+*Link para o vídeo explicativo:* [Meu Vídeo](https://drive.google.com/file/d/1WnckPbSFrLm3VXGdOGcNy8nlS4ZtaNm2/view?usp=sharing)
 
 
 ### Comandos
@@ -25,6 +30,19 @@ Deletar arquivo ou diretório
 
     --path usr/myfile.txt --delete
 
+### Com password
+
+Criando o arquivo/pasta
+
+    python file_system.py --path myfile3.txt --size 32 --password qwert45!
+
+Usando --get_file
+
+      python file_system.py --path myfile3.txt --get_file
+
+Usando --delete
+
+      python file_system.py --path myfile3.txt --delete
 
 Individualmente (ou em dupla), implemente (com qualquer linguagem de programação a sua escolha e sem necessidade de interface gráfica) e apresente (gravando vídeo explicando código e execução):
 
