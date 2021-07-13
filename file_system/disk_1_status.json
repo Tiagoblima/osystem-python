@@ -21,6 +21,32 @@
                 "size": 25,
                 "time_stamp": "29/06/2021 20:09:06"
             },
+            "myfile2.txt": {
+                "block": [
+                    {
+                        "block_id": 241,
+                        "space_available": 0
+                    },
+                    {
+                        "block_id": 360,
+                        "space_available": 0
+                    },
+                    {
+                        "block_id": 217,
+                        "space_available": 0
+                    },
+                    {
+                        "block_id": 740,
+                        "space_available": 8
+                    }
+                ],
+                "is_dir": false,
+                "name": "myfile2.txt",
+                "secure": true,
+                "size": 32,
+                "time_stamp": "13/07/2021 16:08:57",
+                "user_password": "32187654"
+            },
             "sys": {
                 "archives": {},
                 "block": [
@@ -84,6 +110,6 @@
             }
         ],
         "nome": "usr",
-        "size": 90
+        "size": 154
     }
 }

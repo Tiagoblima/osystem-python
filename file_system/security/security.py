@@ -37,7 +37,7 @@ def break_code(code, true_word):
         while random_code != true_word[matches]:
             random_code = random.choice(code)
             random_attempts += 1
-            if random_attempts == 8:
+            if random_attempts == 32:
                 return False
         match_list.insert(matches, random_code)
         matches += 1
@@ -48,9 +48,12 @@ def break_code(code, true_word):
 # Técnica de Júlio Cesar
 
 def cryptography(password, key=2):
-    for i in range(0, int(MAX_SIZE / 2)):
-        aux = password[(i + key) % MAX_SIZE]
-        password[(i + key) % MAX_SIZE] = password[(MAX_SIZE - i) % MAX_SIZE]
-        password[(MAX_SIZE - i) % MAX_SIZE] = aux
+    password = list(password)
 
-    return password
+    pass_size = len(password)
+    for i in range(0, int(len(password)/2)):
+        aux = password[(i + key) % pass_size]
+        password[(i + key) % pass_size] = password[(pass_size - i) % pass_size]
+        password[(pass_size - i) % pass_size] = aux
+
+    return ''.join(password)

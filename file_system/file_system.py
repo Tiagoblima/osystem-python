@@ -6,7 +6,7 @@ import random
 import time
 from io_system.io_system import System
 from io_system.io_system import MIN_BLOCK, MAX_BLOCK
-from security.security import cryptography
+from security.security import cryptography, MAX_SIZE
 from security.security import break_code
 
 io = System()
@@ -157,18 +157,36 @@ class FileSystem:
             path = archive_path.split('/')
             if len(path) == 1:
                 path = ['usr', path[0]]
+
             search_dir = self.disk_1
+
             for i, path_part in enumerate(path):
                 if i == len(path) - 1:
                     break
                 else:
                     search_dir = search_dir[path_part]["archives"]
+
+            if search_dir[path[-1]]["secure"]:
+
+                code = search_dir[path[-1]]["user_password"]
+
+                password_attempt = input('Insert password: ')
+                while not cryptography(password_attempt) == code:
+                    print("Senha incorreta!")
+                    password_attempt = input('Insert password: ')
+
             element_info = search_dir[path[-1]]
             search_dir.pop(path[-1])
             search_dir = self.disk_1
             for part_path in path[:-1]:
                 search_dir[part_path]["size"] -= element_info["size"]
                 search_dir = search_dir[part_path]["archives"]
+
+            if element_info["is_dir"]:
+                print("Folder deleted!")
+            else:
+                print("File deleted!")
+
             return search_dir
         except KeyError:
             print("File or Dir does not exists!")
@@ -187,13 +205,15 @@ class FileSystem:
             else:
                 search_dir = search_dir[path_part]["archives"]
         if search_dir["secure"]:
+
+            code = search_dir["user_password"]
             password_attempt = input('Insert password: ')
-            code = search_dir["password"]
-            if break_code(code, password_attempt):
-                block_list = [block["block_id"] for block in search_dir["block"]]
-                io.seek_blocks(block_list)
-            else:
+            while not cryptography(password_attempt) == code:
                 print("Senha incorreta!")
+                password_attempt = input('Insert password: ')
+
+            block_list = [block["block_id"] for block in search_dir["block"]]
+            io.seek_blocks(block_list)
 
         return search_dir
 
@@ -239,8 +259,8 @@ parser.add_argument('--list_dir', action="store_true", required=False, help="Opt
 
 parser.add_argument('--get_file', action="store_true", required=False, help="Option to list the dir.")
 
-parser.add_argument('--password', action="store_true", required=False, help="Chose use"
-                                                                            "password to secure the dir or file")
+parser.add_argument('--password', type=str, default=None, required=False, help="Chose use"
+                                                                               "password to secure the dir or file")
 parser.add_argument('--is_folder', action="store_true")
 
 parser.add_argument('--delete', action="store_true")
@@ -286,13 +306,19 @@ def main():
         # dd/mm/YY H:M:S
         dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
         name = args.path.split('/')[-1]
-        user_password = ""
+
+        has_password = False
         if args.password:
-            user_password = input('Insert the your password: ')
+            has_password = True
+            user_password = args.password
+
+            assert len(user_password) <= MAX_SIZE, f"Password must have max size of {MAX_SIZE}"
+        else:
+            user_password = ""
 
         element_info = {"name": name,
                         "size": args.size,
-                        "secure": args.password,
+                        "secure": has_password,
                         "user_password": cryptography(user_password),
                         "time_stamp": dt_string,
                         "is_dir": args.is_folder}
